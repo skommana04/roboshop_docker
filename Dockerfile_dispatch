@@ -1,0 +1,15 @@
+FROM golang: 
+RUN useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+USER roboshop
+EXPOSE 8080
+WORKDIR /app
+RUN apt-get update && apt-get install wget unzip &&  \
+    wget https://roboshop-artifacts.s3.amazonaws.com/dispatch-v3.zip && \
+    unzip dispatch-v3.zip && \
+    rm -rf dispatch-v3.zip
+RUN go init dispatch && go get && go build
+ENV AMQP_HOST="rabbitmq"
+    AMQP_USER="roboshop"
+    AMQP_PASS="roboshop123"
+CMD ["/app/dispatch"]
+

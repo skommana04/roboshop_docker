@@ -1,0 +1,13 @@
+FROM node:20
+RUN useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+USER roboshop
+WORKDIR /app
+RUN apt-get update && apt-get install wget unzip && \
+    wget https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip 
+
+RUN npm install
+ENV MONGO=true \
+    REDIS_URL='redis://redis:6379' \
+    MONGO_URL="mongodb://mongodb:27017/users"
+EXPOSE 8080
+CMD ["node","server.js"]

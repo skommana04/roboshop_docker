@@ -1,9 +1,10 @@
 FROM node:20
+RUN useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+USER roboshop
 WORKDIR /app
-USER "roboshop"
 COPY ./data/package.json .
 COPY ./data/*.js .
 RUN npm install
 ENV MONGO="true"
-    MONGO_URL="mongodb://<MONGODB-SERVER-IPADDRESS>:27017/catalogue"
+    MONGO_URL="mongodb://mongodb:27017/catalogue"
 CMD ["node","server.js"]
