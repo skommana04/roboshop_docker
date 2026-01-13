@@ -1,12 +1,11 @@
 FROM maven:3.9.11
+WORKDIR /app
+COPY ./shipping/pom.xml .
+COPY ./shipping/src/ ./src
+RUN mvn clean package
+RUN mv target/shipping-*.jar shipping.jar
 RUN useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
 USER roboshop
-WORKDIR /app
-RUN apt-get update && apt-get install wget unzip && \
-    wget https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip && \
-    unzip shipping-v3.zip && \
-    rm -rf shipping-v3.zip
-RUN mvn clean package
 ENV CART_ENDPOINT="cart:8080" \
     DB_HOST="mysql"
 EXPOSE 8080

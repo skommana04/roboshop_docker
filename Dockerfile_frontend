@@ -1,10 +1,9 @@
 FROM nginx:1.29.4
-RUN apt-get update && apt-get install -y wget unzip && rm -rf /var/lib/apt/lists/*
+RUN rm -rf /usr/share/nginx/html/*
+RUN rm -rf /etc/nginx/nginx.conf
+RUN rm -rf /etc/nginx/conf.d/default.conf
 WORKDIR /usr/share/nginx/html
-RUN rm -rf /usr/share/nginx/html/* \
-    wget https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
-    unzip frontend-v3.zip
-    rm frontend-v3.zip
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY ./frontend/ .
+COPY ./frontend/nginx.conf /etc/nginx/nginx.conf
 CMD ["nginx","-g","daemon off;"] 
 
